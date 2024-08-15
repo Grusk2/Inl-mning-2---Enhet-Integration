@@ -1,7 +1,7 @@
-// ColorChanger.tsx
 import React, { useState } from 'react';
+import './colorChanger.css'; 
 
-const colors = ['red', 'green', 'blue']; // Example colors
+const colors = ['red', 'green', 'blue']; 
 
 const ColorChanger: React.FC = () => {
   const [currentColor, setCurrentColor] = useState(0);
@@ -11,9 +11,13 @@ const ColorChanger: React.FC = () => {
   };
 
   return (
-    <div>
-      <div data-testid="color-box" style={{ backgroundColor: colors[currentColor], width: '100px', height: '100px' }}></div>
-      <button onClick={handleClick}>Change Color</button>
+    <div className="color-changer">
+      <div
+        data-testid="color-box"
+        className="color-box"
+        style={{ backgroundColor: colors[currentColor] }}
+      ></div>
+      <button className="color-button" onClick={handleClick}>Change Color</button>
     </div>
   );
 };
