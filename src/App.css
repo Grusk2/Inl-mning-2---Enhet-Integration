@@ -1,0 +1,13 @@
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 5rem;
+    padding: 1rem;
+  }
+  
+  section {
+    display: flex;
+    justify-content: center;
+    padding-top: 15rem;
+  }
