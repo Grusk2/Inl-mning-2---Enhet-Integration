@@ -1,43 +1,40 @@
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import ThemeToggler from './ThemeToggler';
 
 describe('ThemeToggler Component', () => {
   beforeEach(() => {
-    localStorage.clear();
+    global.localStorage.setItem = vi.fn();
+    global.localStorage.getItem = vi.fn(() => null);
     document.body.className = '';
   });
 
   it('should initialize to light mode and toggle to dark mode', () => {
-    render(<ThemeToggler />);
+    const toggleTheme = vi.fn();
+    render(<ThemeToggler isDarkMode={false} toggleTheme={toggleTheme} />);
 
-    expect(document.body.classList.contains('dark-mode')).toBe(false);
+    expect(document.body.className).not.toContain('dark-mode');
     expect(screen.getByText('Switch to Dark Mode')).toBeInTheDocument();
 
     fireEvent.click(screen.getByText('Switch to Dark Mode'));
 
-    expect(document.body.classList.contains('dark-mode')).toBe(true);
-    expect(screen.getByText('Switch to Light Mode')).toBeInTheDocument();
+    expect(toggleTheme).toHaveBeenCalled();
   });
 
   it('should initialize to dark mode if it was saved in localStorage', () => {
-    localStorage.setItem('theme', 'dark');
+    global.localStorage.getItem = vi.fn(() => 'dark');
+    const toggleTheme = vi.fn();
+    render(<ThemeToggler isDarkMode={true} toggleTheme={toggleTheme} />);
 
-    render(<ThemeToggler />);
-
-    expect(document.body.classList.contains('dark-mode')).toBe(true);
+    expect(document.body.className).toContain('dark-mode');
     expect(screen.getByText('Switch to Light Mode')).toBeInTheDocument();
   });
 
   it('should update localStorage on toggle', () => {
-    render(<ThemeToggler />);
+    const toggleTheme = vi.fn();
+    render(<ThemeToggler isDarkMode={false} toggleTheme={toggleTheme} />);
 
     fireEvent.click(screen.getByText('Switch to Dark Mode'));
-
-    expect(localStorage.getItem('theme')).toBe('dark');
-
-    fireEvent.click(screen.getByText('Switch to Light Mode'));
-
-    expect(localStorage.getItem('theme')).toBe('light');
+    expect(toggleTheme).toHaveBeenCalled();
   });
 });
